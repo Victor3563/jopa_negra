@@ -17,7 +17,7 @@ class Parrot():
         self.rect = self.bird_mask.get_bounding_rects()[0]
         
         # Задаем позицию по горизонтали в которой всегда будет находится попугай
-        self.rect.midbottom = self.screen_rect.midbottom
+        self.rect.center = self.screen_rect.center
         self.y = float(self.rect.y)
 
         #Задаем начальную скорость

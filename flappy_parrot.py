@@ -3,6 +3,8 @@ import pygame
 
 from settings import Settings
 from parrot import Parrot
+from column import ColumnPair, Column
+from button import Button
 
 class FlappyParrot:
     """Класс для управления ресурсами и поведением игры"""
@@ -17,6 +19,11 @@ class FlappyParrot:
         pygame.display.set_caption("Flappy Parrot")
 
         self.parrot = Parrot(self)
+        self.play_button = Button(self,"Play")
+
+        # Список для хранения всех колонн
+        self.columns = set()
+        self.last_spawn_time = pygame.time.get_ticks()  # Время последнего спауна
 
         self.space_pressed = False
 
@@ -25,7 +32,17 @@ class FlappyParrot:
         """Запуск игры"""
         while True:
             self.check_events()
-            self.update_screen()
+            if self.settings.game_active:
+                self.spawn_columns()
+                self.check_collisions() 
+                self.update_screen()
+                    #кнопка play
+            if not self.settings.game_active:
+                self.play_button.draw_buttom()
+
+            #Отображаем экран
+            pygame.display.flip()
+
 
     def check_events(self):
         """Обрабатываем нажатия клавишь"""
@@ -44,16 +61,49 @@ class FlappyParrot:
                 if event.key == pygame.K_SPACE:
                     self.space_pressed = False
 
+            elif event.type == pygame.MOUSEBUTTONDOWN and not self.settings.game_active:
+                mouse_pos = pygame.mouse.get_pos()
+                self._check_play_button(mouse_pos)
+    
+    def _check_play_button(self, mous_pos):
+        """Запускаем новую игру при нажатии кнопки"""
+        if self.play_button.rect.collidepoint(mous_pos):
+            self.settings._reset()
+            for column_pair in self.columns:
+                column_pair.empty()
+            self.parrot.rect.center = self.parrot.screen_rect.center
+            self.settings.game_active = True
+
+    def check_collisions(self):
+        """Проверка на столкновение попугая с колоннами"""
+        # Проверяем пересечение rect попугая с rect каждой колонны в колоннах
+        for column_pair in self.columns:
+            if pygame.sprite.spritecollideany(self.parrot,column_pair):
+                print("Столкновение!")
+                self.settings.game_active = False
+
 
     def update_screen(self):
         """Перерисовываем экран и выводим его"""
         #Перерисовываем экран
         self.screen.fill(self.settings.bg_color)
         self.parrot.update()
+        
         self.parrot.blitme()
+        # Отображаем все колонны из группы колонн
+        for column_pair in self.columns:
+            column_pair.update()
+            column_pair.blitme()
 
-        #Отображаем экран
-        pygame.display.flip()
+
+
+    def spawn_columns(self):
+        """Спавнит новую пару колонн каждые n секунд"""
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_spawn_time >= self.settings.spawn_time:  # Проверка интервала
+            new_column_pair = ColumnPair(self)
+            self.columns.add(new_column_pair)  # Добавляем новую колонну
+            self.last_spawn_time = current_time  # Обновляем время последнего спауна
 
 
 if __name__ == '__main__':
