@@ -26,6 +26,7 @@ class Parrot():
     def update(self) -> None:
         """ Управляем полетом птицы"""
         # Обновляем скорость (гравитация или любое другое изменение скорости)
+        self.y = float(self.rect.y)
         self.speed -= self.settings.decrease_speed
         self.y -= self.speed
 
