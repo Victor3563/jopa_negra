@@ -1,9 +1,11 @@
 import pygame
 import random
+
 from settings import Settings
 
+
 class ColumnPair(pygame.sprite.Sprite):
-    """Класс пары колонн с зазором"""
+    # Класс пары колонн с зазором
     def __init__(self, game):
         super().__init__()
         self.settings = game.settings
@@ -18,8 +20,11 @@ class ColumnPair(pygame.sprite.Sprite):
         # Список для хранения прямоугольников частей колонны
         self.parts = []
 
+        # Прошёл ли попугай колонну
+        self.passed = False
+
         # Задаем расположение колонн
-        gap_y = random.randint(0, self.screen_rect.height - int(self.settings.column_hole))
+        gap_y = random.randint(0, self.screen_rect.height -  int(self.settings.column_hole) - 100)
 
         # Строим верхнюю и нижнюю колонну
         top_column_height = gap_y
@@ -32,7 +37,7 @@ class ColumnPair(pygame.sprite.Sprite):
         self.create_column_part(self.image_mid, self.screen_rect.width + 108, mid_y, 'mid')
 
     def create_column_part(self, image, x, y, position):
-        """Создает часть колонны и добавляет ее в список частей"""
+        # Создает часть колонны и добавляет ее в список частей
         part_rect = image.get_rect()
         part_rect.x = x
         if position == 'top_mid':
@@ -42,22 +47,28 @@ class ColumnPair(pygame.sprite.Sprite):
         self.parts.append((image, part_rect))
 
     def is_near_parrot(self, parrot_collision_zone):
-        """Проверяет, находится ли какая-либо часть колонн внутри зоны вокруг попугая"""
+        # Проверяет, находится ли какая-либо часть колонн внутри зоны вокруг попугая
         for _, rect in self.parts:
             if rect.colliderect(parrot_collision_zone):
                 return True
         return False
 
-    def update(self):
-        """Обновляет позиции всех частей колонны"""
+    def update(self, parrot):
+        # Обновляет позиции всех частей колонны
         speed = self.settings.column_start_speed
         for _, rect in self.parts:
             rect.x -= speed
+
+        # Обновляем очки
+        if not self.passed and rect.right < parrot.rect.left:
+            self.passed = True
+            self.settings.counter += 1
+
         # Удаляем части колонны, если они вышли за экран
-        if rect.x < 0:
+        if rect.x < -20:
             self.kill()
 
     def blitme(self):
-        """Отображает все части колонн на экране"""
+        # Отображает все части колонн на экране
         for image, rect in self.parts:
             self.screen.blit(image, rect)
