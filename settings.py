@@ -13,6 +13,7 @@ class Settings():
         # Параметры экрана
         self.screen_width = pygame.display.set_mode((0, 0), pygame.FULLSCREEN).get_width()
         self.screen_height = pygame.display.set_mode((0, 0), pygame.FULLSCREEN).get_height()
+        self.image_parot = pygame.image.load('images/parrot_without_phone.png')
         self.bg_color = (200,200,230)
 
         # Параметры попугая

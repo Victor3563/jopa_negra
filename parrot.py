@@ -12,7 +12,7 @@ class Parrot():
         self.screen_rect = game.screen.get_rect()
 
         # Загружаем изображение попугая и получаем границы
-        self.image = pygame.image.load('images/parrot_without_phone.png')
+        self.image = self.settings.image_parot
         # Создаем маску изображения попугая для точных границ
         self.bird_mask = pygame.mask.from_surface(self.image)
         self.rect = self.bird_mask.get_bounding_rects()[0]

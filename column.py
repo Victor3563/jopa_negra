@@ -11,6 +11,7 @@ class ColumnPair(pygame.sprite.Sprite):
         self.settings = game.settings
         self.screen = game.screen
         self.screen_rect = game.screen.get_rect()
+        self.size_parot = self.settings.image_parot.get_width()
 
         # Загрузка изображений частей колонны
         self.image_bot = self.settings.image_bot
@@ -48,25 +49,34 @@ class ColumnPair(pygame.sprite.Sprite):
 
     def is_near_parrot(self, parrot_collision_zone):
         # Проверяет, находится ли какая-либо часть колонн внутри зоны вокруг попугая
+        if ((self.screen_rect.center[0] + self.size_parot < self.parts[0][1].x) or (self.parts[0][1].x < self.screen_rect.center[0] - self.size_parot)):
+            return False
         for _, rect in self.parts:
+            
             if rect.colliderect(parrot_collision_zone):
                 return True
         return False
 
     def update(self, parrot):
         # Обновляет позиции всех частей колонны
+        self.x = float(self.parts[0][1].x)
         speed = self.settings.column_start_speed
+        self.x -= speed
+
+        # Удаляем части колонны, если они вышли за экран
+        if self.x < -20:
+            self.kill()
+        
         for _, rect in self.parts:
-            rect.x -= speed
+            rect.x = int(self.x)
 
         # Обновляем очки
         if not self.passed and rect.right < parrot.rect.left:
             self.passed = True
             self.settings.counter += 1
 
-        # Удаляем части колонны, если они вышли за экран
-        if rect.x < -20:
-            self.kill()
+        
+        
 
     def blitme(self):
         # Отображает все части колонн на экране
