@@ -13,7 +13,7 @@ class Settings():
         # Параметры экрана
         self.screen_width = pygame.display.set_mode((0, 0), pygame.FULLSCREEN).get_width()
         self.screen_height = pygame.display.set_mode((0, 0), pygame.FULLSCREEN).get_height()
-        self.image_parot = pygame.image.load('images/parrot_without_phone.png')
+        self.image_parot = pygame.image.load('src/resources/images/parrot_without_phone.png')
         self.bg_color = (200,200,230)
 
         # Параметры попугая
@@ -24,9 +24,9 @@ class Settings():
         self.column_start_speed = 8
         self.column_hole = 300
         self.spawn_time = 1500
-        self.image_bot = pygame.image.load('images/Top_column.png')
+        self.image_bot = pygame.image.load('src/resources/images/Top_column.png')
         self.image_top = pygame.transform.rotate(self.image_bot, 180)
-        self.image_mid = pygame.image.load('images/longlong_mid.png')
+        self.image_mid = pygame.image.load('src/resources/images/longlong_mid.png')
 
     def _reset(self):
         # Выводим все к начальным настройкам

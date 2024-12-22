@@ -1,6 +1,6 @@
 import pygame
 
-from settings import Settings
+from src.logic.settings import Settings
 
 
 class Parrot():

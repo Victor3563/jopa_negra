@@ -1,7 +1,7 @@
 import pygame
 import random
 
-from settings import Settings
+from src.logic.settings import Settings
 
 
 class ColumnPair(pygame.sprite.Sprite):

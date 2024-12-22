@@ -1,10 +1,10 @@
 import sys
 import pygame
 
-from settings import Settings
-from parrot import Parrot
-from column import ColumnPair
-from button import Button
+from src.logic.settings import Settings
+from src.logic.parrot import Parrot
+from src.logic.column import ColumnPair
+from src.logic.button import Button
 
 
 class FlappyParrot:
