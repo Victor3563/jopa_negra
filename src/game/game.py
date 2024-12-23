@@ -57,6 +57,7 @@ class FlappyParrot:
                 if event.key == pygame.K_SPACE and not self.space_pressed:
                     self.parrot.speed = self.settings.defolt_speed
                     self.settings.decrease_speed = 1
+                    self.parrot.image = self.settings.image_parot2
                     self.space_pressed = True
                 elif event.key == pygame.K_RETURN and not self.settings.game_active:
                     self.settings._reset()
@@ -66,6 +67,7 @@ class FlappyParrot:
                     pygame.mouse.set_visible(False)
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
+                    self.parrot.image = self.settings.image_parot
                     self.space_pressed = False
             elif event.type == pygame.MOUSEBUTTONDOWN and not self.settings.game_active:
                 mouse_pos = pygame.mouse.get_pos()

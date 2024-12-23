@@ -13,10 +13,11 @@ class Settings():
         # Параметры экрана
         self.screen_width = pygame.display.set_mode((0, 0), pygame.FULLSCREEN).get_width()
         self.screen_height = pygame.display.set_mode((0, 0), pygame.FULLSCREEN).get_height()
-        self.image_parot = pygame.image.load('resources/images/parrot_without_phone.png')
         self.bg_color = (200,200,230)
 
         # Параметры попугая
+        self.image_parot2 = pygame.image.load('resources/images/cropped_parrot1.png')
+        self.image_parot = pygame.image.load('resources/images/cropped_parrot.png')
         self.defolt_speed = 17
         self.decrease_speed = 1
 
