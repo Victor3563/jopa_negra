@@ -12,7 +12,7 @@ class Parrot():
         self.screen_rect = game.screen.get_rect()
 
         # Загружаем изображение попугая и получаем границы
-        self.image = self.settings.image_parot
+        self.image = self.settings.skins[self.settings.skin_number]['down']
         # Создаем маску изображения попугая для точных границ
         self.bird_mask = pygame.mask.from_surface(self.image)
         self.rect = self.bird_mask.get_bounding_rects()[0]
@@ -51,5 +51,5 @@ class Parrot():
 
     def blitme(self) -> None:
         # Рисует птицу
-        pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 2)
+        # pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 2)
         self.screen.blit(self.image, self.rect)

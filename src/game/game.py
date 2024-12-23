@@ -57,7 +57,7 @@ class FlappyParrot:
                 if event.key == pygame.K_SPACE and not self.space_pressed:
                     self.parrot.speed = self.settings.defolt_speed
                     self.settings.decrease_speed = 1
-                    self.parrot.image = self.settings.image_parot2
+                    self.parrot.image = self.settings.skins[self.settings.skin_number]['up']
                     self.space_pressed = True
                 elif event.key == pygame.K_RETURN and not self.settings.game_active:
                     self.settings._reset()
@@ -67,7 +67,7 @@ class FlappyParrot:
                     pygame.mouse.set_visible(False)
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
-                    self.parrot.image = self.settings.image_parot
+                    self.parrot.image = self.settings.skins[self.settings.skin_number]['down']
                     self.space_pressed = False
             elif event.type == pygame.MOUSEBUTTONDOWN and not self.settings.game_active:
                 mouse_pos = pygame.mouse.get_pos()
@@ -87,7 +87,8 @@ class FlappyParrot:
     def _check_customize_button(self, mous_pos):
         # Выходим из игры при нажатии кнопки
         if self.customize_button.rect.collidepoint(mous_pos):
-            pass
+            self.settings.skin_number = (self.settings.skin_number + 1) % 3
+            self.parrot.image = self.settings.skins[self.settings.skin_number]['up']
 
     def _check_quit_button(self, mous_pos):
         # Выходим из игры при нажатии кнопки
@@ -102,6 +103,9 @@ class FlappyParrot:
         for column_pair in self.columns:
             if column_pair.is_near_parrot(parrot_collision_zone):
                 self.settings.game_active = False
+                if self.settings.counter > self.settings.best_score:
+                    self.settings.best_score = self.settings.counter
+                    self.settings.save_best_score()
                 break
 
     def display_score(self):
@@ -113,6 +117,15 @@ class FlappyParrot:
         # Отступ от верхней границы экрана
         score_rect.top = 20
         self.screen.blit(score_image, score_rect)
+
+    def display_best_score(self):
+        # Отображаем лучший результат
+        font = pygame.font.SysFont(None, 48)
+        best_score_image = font.render(f'Best score: {self.settings.best_score}', True, (0, 0, 0))
+        best_score_rect = best_score_image.get_rect()
+        best_score_rect.right = self.screen.get_rect().right - 20
+        best_score_rect.top = 20
+        self.screen.blit(best_score_image, best_score_rect)
 
     def update_screen(self):
         # Перерисовываем экран и выводим его
@@ -129,6 +142,7 @@ class FlappyParrot:
 
         # Отображение очков
         self.display_score()
+        self.display_best_score()
 
     def spawn_columns(self):
         # Спавнит новую пару колонн каждые n секунд

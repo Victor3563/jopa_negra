@@ -59,16 +59,18 @@ class ColumnPair(pygame.sprite.Sprite):
 
     def update(self, parrot):
         # Обновляет позиции всех частей колонны
-        self.x = float(self.parts[0][1].x)
         speed = self.settings.column_start_speed
-        self.x -= speed
-
         # Удаляем части колонны, если они вышли за экран
-        if self.x < -20:
-            self.kill()
-        
         for _, rect in self.parts:
-            rect.x = int(self.x)
+            self.x = float(rect.x)
+            self.x -= speed
+            rect.x = self.x
+            if rect.x < -20:
+                self.kill()
+        # Обновляем очки
+        if not self.passed and rect.right < parrot.rect.left:
+            self.passed = True
+            self.settings.counter += 1
 
         # Обновляем очки
         if not self.passed and rect.right < parrot.rect.left:
